@@ -1,7 +1,7 @@
 # Outline for the Minesweeper problem and the agents
-# Need to find where memoize, PriorityQueue, and is_in are defined and add them here somehow
 
 import sys
+from helpers import *
 
 class Problem:
     """The abstract class for a formal problem. You should subclass
@@ -52,8 +52,6 @@ class Problem:
         and related algorithms try to maximize this value."""
         raise NotImplementedError
     
-
-
 class Node:
     """A node in a search tree. Contains a pointer to the parent (the node
     that this is a successor of) and to the actual state for this node. Note
@@ -118,8 +116,6 @@ class Node:
         # with the same state in a Hash Table
         return hash(self.state)
     
-
-
 class SimpleProblemSolvingAgentProgram:
     """
     [Figure 3.1]
@@ -157,8 +153,6 @@ class SimpleProblemSolvingAgentProgram:
     def search(self, problem):
         raise NotImplementedError
     
-
-
 def depth_limited_search(problem, limit=50):
     """[Figure 3.17]"""
 
@@ -186,8 +180,6 @@ def iterative_deepening_search(problem):
         result = depth_limited_search(problem, depth)
         if result != 'cutoff':
             return result
-
-
 
 def best_first_graph_search(problem, f, display=False):
     """Search the nodes with the lowest f scores first.
@@ -225,7 +217,4 @@ def astar_search(problem, h=None, display=False):
     h = memoize(h or problem.h, 'h')
     return best_first_graph_search(problem, lambda n: n.path_cost + h(n), display)
 
-
-
-class Minesweeper(Problem):
-
+# class Minesweeper(Problem):
