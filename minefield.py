@@ -107,6 +107,7 @@ class Minefield:
             row = removed[0]
             col = removed[1]
             if self.field[row][col].status == "M":
+                # Keeps revealing cells until a mine is revealed
                 break 
             self.field[row][col].revealed = True
             if row - 1 >= 0 and not self.field[row - 1][col].revealed: 
@@ -121,12 +122,8 @@ class Minefield:
             if col + 1 < len(self.field[0]) and not self.field[row][col + 1].revealed: 
                 next = [row, col + 1]
                 queue.append(next)
-        # for i in range(len(self.field)):
-        #     for j in range(len(self.field[0])):
-        #         if self.field[i][j].revealed == True and self.field[i][j].status == "0":
-        #             self.reveal_zeroes(i, j)
 
-    def guess(self, x, y, flag):
+    def reveal_cell(self, x, y, flag):
         if flag == True:
             if self.flags > 0:
                 self.field[x][y].status = "F"
@@ -160,7 +157,7 @@ class Minefield:
         return False
 
     def __str__(self):
-        board = "     "  
+        board = "    "  
         for i in range(len(self.field[0])):
             board += f" {i:2}"
         board += "\n"
