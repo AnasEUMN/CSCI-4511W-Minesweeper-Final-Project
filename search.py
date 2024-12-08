@@ -102,8 +102,7 @@ class Node:
 
     # We want for a queue of nodes in breadth_first_graph_search or
     # astar_search to have no duplicated states, so we treat nodes
-    # with the same state as equal. [Problem: this may not be what you
-    # want in other contexts.]
+    # with the same state as equal.
 
     def __eq__(self, other):
         return isinstance(other, Node) and self.state == other.state
@@ -195,6 +194,7 @@ def best_first_graph_search(problem, f, display=False):
     explored = set()
     while frontier:
         node = frontier.pop()
+        # Might need to edit this based on what goal_test will return
         if problem.goal_test(node.state):
             if display:
                 print(len(explored), "paths have been expanded and", len(frontier), "paths remain in the frontier")
@@ -235,10 +235,12 @@ class Minesweeper(Problem):
         """ Given state and action, return a new state that is the result of the action.
         Action is assumed to be a valid action in the state """
         cell = action.split(",")
-        state.reveal_cell(cell[0], cell[1], False)
+        # Python objects mutable?
+        state.reveal_cell(int(cell[0]), int(cell[1]), False)
         return state
 
     def goal_test(self, state):
         """ Given a state, return True if state is a goal state or False, otherwise """
+        # What would a smaller intermmediate goal be and what should be returned?
         return state == self.goal
     
