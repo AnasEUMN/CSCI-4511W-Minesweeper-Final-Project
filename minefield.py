@@ -6,9 +6,9 @@ class Cell:
         self.status = status    
 
 class Minefield:
-    def __init__(self, rows, cols, flags):
+    def __init__(self, rows, cols, mines):
         # Minefield size is not expected to be very large
-        self.flags = flags
+        self.flags = mines
         self.field = []
         for i in range(rows):
             row = []
@@ -16,9 +16,13 @@ class Minefield:
                 cell = Cell(False, "-")
                 row.append(cell)
             self.field.append(row)
+        self.place_mines(0, 0, mines)
+        self.evaluate_field()
+        # Always reveals the top left corner first
+        self.reveal_start_area(0, 0)
 
-    def place_mines(self, x, y, numMines):
-        while numMines > 0:
+    def place_mines(self, x, y, mines):
+        while mines > 0:
             xRandom = -1
             yRandom = -1
             success = False
@@ -36,7 +40,7 @@ class Minefield:
                     # Avoids placing a mine in a revealed cell
                     success = False
             self.field[xRandom][yRandom].status = "M"
-            numMines -= 1
+            mines -= 1
 
     def evaluate_field(self):
         for i in range(len(self.field)):
@@ -124,7 +128,7 @@ class Minefield:
                 queue.append(next)
 
     def reveal_cell(self, x, y, flag):
-        if flag == True:
+        if flag:
             if self.flags > 0:
                 self.field[x][y].status = "F"
                 self.field[x][y].revealed = True
@@ -175,9 +179,6 @@ class Minefield:
             board += "\n"
         return board
 
-m = Minefield(11, 11, 10)
-m.place_mines(0, 0, 10)
-m.evaluate_field()
-m.reveal_start_area(0, 0)
+m = Minefield(16, 16, 40)
 print(m)
        

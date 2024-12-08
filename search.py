@@ -1,6 +1,5 @@
-# Outline for the Minesweeper problem and the agents
-
 import sys
+from minefield import *
 from helpers import *
 
 class Problem:
@@ -217,4 +216,29 @@ def astar_search(problem, h=None, display=False):
     h = memoize(h or problem.h, 'h')
     return best_first_graph_search(problem, lambda n: n.path_cost + h(n), display)
 
-# class Minesweeper(Problem):
+class Minesweeper(Problem):
+    def __init__(self, initial, goal=None):
+        """ Define goal state and initialize a problem """
+        super().__init__(initial, goal)
+
+    def actions(self, state):
+        """ Return a list of actions that can be executed in the given state """
+        possible_actions = []
+        for i in range(len(state)):
+            for j in range(len(state[0])):
+                if not state[i][j].revealed:
+                    action = f"{i},{j}"
+                    possible_actions.append(action)
+        return possible_actions
+    
+    def result(self, state, action):
+        """ Given state and action, return a new state that is the result of the action.
+        Action is assumed to be a valid action in the state """
+        cell = action.split(",")
+        state.reveal_cell(cell[0], cell[1], False)
+        return state
+
+    def goal_test(self, state):
+        """ Given a state, return True if state is a goal state or False, otherwise """
+        return state == self.goal
+    
