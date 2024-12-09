@@ -160,7 +160,7 @@ class Minefield:
             return True
         return False
     
-    def get_neighborhood(self, x, y):
+    def get_neighborhood(self, x, y):  # U(b)
         neighborhood = []
         if x - 1 >= 0:
             neighborhood.append(self.field[x - 1][y])
@@ -180,15 +180,15 @@ class Minefield:
             neighborhood.append(self.field[x][y + 1]) 
         return neighborhood
 
-    # def get_mine_cells(self):
-    #     mines = []
-    #     for i in range(len(self.field)):
-    #         for j in range(len(self.field[0])):
-    #             if self.field[i][j].status == "M":
-    #                 mines.append(self.field[i][j])
-    #     return mines 
+    def get_mine_cells(self):  # M
+        mines = []
+        for i in range(len(self.field)):
+            for j in range(len(self.field[0])):
+                if self.field[i][j].status == "M":
+                    mines.append(self.field[i][j])
+        return mines 
 
-    def get_num_neighboring_mines(self, x, y):
+    def get_num_neighboring_mines(self, x, y):  # f(b)
         count = 0
         if self.field[x][y].status != "M":
             count = int(self.field[x][y].status) 
@@ -199,7 +199,15 @@ class Minefield:
                     count += 1
         return count
     
-    def get_unrevealed_cells(self):
+    def get_revealed_cells(self):  # B
+        revealed = []
+        for i in range(len(self.field)):
+            for j in range(len(self.field[0])):
+                if self.field[i][j].revealed:
+                    revealed.append(self.field[i][j])
+        return revealed    
+    
+    def get_unrevealed_cells(self):  # C
         unrevealed = []
         for i in range(len(self.field)):
             for j in range(len(self.field[0])):
@@ -226,6 +234,6 @@ class Minefield:
             board += "\n"
         return board
     
-m = Minefield(16, 16, 40)
-print(m)
+# m = Minefield(16, 16, 40)
+# print(m)
        

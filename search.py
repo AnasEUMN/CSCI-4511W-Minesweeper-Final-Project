@@ -194,7 +194,6 @@ def best_first_graph_search(problem, f, display=False):
     explored = set()
     while frontier:
         node = frontier.pop()
-        # Might need to edit this based on what goal_test will return
         if problem.goal_test(node.state):
             if display:
                 print(len(explored), "paths have been expanded and", len(frontier), "paths remain in the frontier")
@@ -235,12 +234,12 @@ class Minesweeper(Problem):
         """ Given state and action, return a new state that is the result of the action.
         Action is assumed to be a valid action in the state """
         cell = action.split(",")
-        # Python objects mutable?
+        # Python objects mutable? Would revealing a cell here cause a failure later on? Do we need to make a copy of the state first?
         state.reveal_cell(int(cell[0]), int(cell[1]), False)
         return state
 
     def goal_test(self, state):
         """ Given a state, return True if state is a goal state or False, otherwise """
-        # What would a smaller intermmediate goal be and what should be returned?
-        return state == self.goal
+        # Return game_over and check elsewhere if agent lost or won?
+        return state.game_over()
     
