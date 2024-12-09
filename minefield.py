@@ -159,6 +159,53 @@ class Minefield:
         if all_revealed == True:
             return True
         return False
+    
+    def get_neighborhood(self, x, y):
+        neighborhood = []
+        if x - 1 >= 0:
+            neighborhood.append(self.field[x - 1][y])
+            if y - 1 >= 0:
+                neighborhood.append(self.field[x - 1][y - 1])
+            if y + 1 < len(self.field[0]):
+                neighborhood.append(self.field[x - 1][y + 1])
+        if x + 1 < len(self.field):
+            neighborhood.append(self.field[x + 1][y]) 
+            if y - 1 >= 0:
+                neighborhood.append(self.field[x + 1][y - 1])
+            if y + 1 < len(self.field[0]):
+                neighborhood.append(self.field[x + 1][y + 1])
+        if y - 1 >= 0:
+            neighborhood.append(self.field[x][y - 1]) 
+        if y + 1 < len(self.field[0]):
+            neighborhood.append(self.field[x][y + 1]) 
+        return neighborhood
+
+    # def get_mine_cells(self):
+    #     mines = []
+    #     for i in range(len(self.field)):
+    #         for j in range(len(self.field[0])):
+    #             if self.field[i][j].status == "M":
+    #                 mines.append(self.field[i][j])
+    #     return mines 
+
+    def get_num_neighboring_mines(self, x, y):
+        count = 0
+        if self.field[x][y].status != "M":
+            count = int(self.field[x][y].status) 
+        else:
+            neighborhood = self.get_neighborhood(x, y)
+            for cell in neighborhood:
+                if cell.status == "M":
+                    count += 1
+        return count
+    
+    def get_unrevealed_cells(self):
+        unrevealed = []
+        for i in range(len(self.field)):
+            for j in range(len(self.field[0])):
+                if not self.field[i][j].revealed:
+                    unrevealed.append(self.field[i][j])
+        return unrevealed
 
     def __str__(self):
         board = "    "  
@@ -178,7 +225,7 @@ class Minefield:
                     board += "  -" 
             board += "\n"
         return board
-
+    
 m = Minefield(16, 16, 40)
 print(m)
        
