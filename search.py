@@ -81,8 +81,7 @@ class Node:
         """List the nodes reachable in one step from this node."""
         return [self.child_node(problem, action)
                 for action in problem.actions(self.state)]
-    # Edit this? Need to check the heuristic value of each cell in the current state, not the heuristic values of next states
-    # Calculate heuristic values first, then perform the action
+    
     def child_node(self, problem, action):
         """[Figure 3.10]"""
         next_state = problem.result(self.state, action)
@@ -180,41 +179,22 @@ def iterative_deepening_search(problem):
         if result != 'cutoff':
             return result
 
-def best_first_graph_search(problem, f, display=False):
-    """Search the nodes with the lowest f scores first.
-    You specify the function f(node) that you want to minimize; for example,
-    if f is a heuristic estimate to the goal, then we have greedy best
-    first search; if f is node.depth then we have breadth-first search.
-    There is a subtlety: the line "f = memoize(f, 'f')" means that the f
-    values will be cached on the nodes as they are computed. So after doing
-    a best first search you can examine the f values of the path returned."""
-    f = memoize(f, 'f')
-    node = Node(problem.initial)
-    frontier = PriorityQueue('min', f)
-    frontier.append(node)
-    explored = set()
-    while frontier:
-        node = frontier.pop()
-        if problem.goal_test(node.state):
-            if display:
-                print(len(explored), "paths have been expanded and", len(frontier), "paths remain in the frontier")
-            return node
-        explored.add(node.state)
-        for child in node.expand(problem):
-            if child.state not in explored and child not in frontier:
-                frontier.append(child)
-            elif child in frontier:
-                if f(child) < frontier[child]:
-                    del frontier[child]
-                    frontier.append(child)
-    return None    
 
-def astar_search(problem, h=None, display=False):
-    """A* search is best-first graph search with f(n) = g(n)+h(n).
-    You need to specify the h function when you call astar_search, or
-    else in your Problem subclass."""
-    h = memoize(h or problem.h, 'h')
-    return best_first_graph_search(problem, lambda n: n.path_cost + h(n), display)
+def heuristic_1(state): 
+    return ""
+
+def heuristic_2(state): 
+    return ""
+
+def minesweeper_astar_search(problem, heuristic):
+    """ Variant of A* specific for Minesweeper. This version uses a heuristic to test which cell to reveal before taking actions.
+    In Minesweeper, once an action is taken, there is no going back. """
+    state = problem.initial
+    while not problem.goal_test(state):
+        action = problem.best_action(state, heuristic)
+        cell = action.split(",")
+        win = state.reveal_cell(cell[0], cell[1], False)
+    return (state, win)    
 
 class Minesweeper(Problem):
     def __init__(self, initial, goal=None):
@@ -231,13 +211,13 @@ class Minesweeper(Problem):
                     possible_actions.append(action)
         return possible_actions
     
-    def result(self, state, action):
-        """ Given state and action, return a new state that is the result of the action.
-        Action is assumed to be a valid action in the state """
-        cell = action.split(",")
-        # Would revealing a cell here cause a failure later on? Can't undo guesses in Minesweeper
-        state.reveal_cell(int(cell[0]), int(cell[1]), False)
-        return state
+    def best_action(self, state, heuristic):
+        """ Given a Minesweeper state, return the best action according to the given Minesweeper heuristic """
+        if heuristic == 1:
+            best_action = heuristic_1(state)
+        elif heuristic == 2:
+            best_action = heuristic_2(state)
+        return best_action 
 
     def goal_test(self, state):
         """ Given a state, return True if state is a goal state or False, otherwise """

@@ -132,18 +132,18 @@ class Minefield:
             if self.flags > 0:
                 self.field[x][y].status = "F"
                 self.field[x][y].revealed = True
-                return False
+                return True
         else:
             if self.field[x][y].status == "0":
                 self.field[x][y].revealed = True
                 self.reveal_zeroes(x, y)
-                return False
-            elif self.field[x][y].status == "M":
-                # Returns True if a mine was revealed
-                self.field[x][y].revealed = True
                 return True
+            elif self.field[x][y].status == "M":
+                # Returns False if a mine was revealed
+                self.field[x][y].revealed = True
+                return False
         self.field[x][y].revealed = True
-        return False
+        return True
 
     def game_over(self):
         for i in range(len(self.field)):
