@@ -111,7 +111,7 @@ class Minefield:
             row = removed[0]
             col = removed[1]
             if self.field[row][col].status == "M":
-                # Keeps revealing cells until a mine is revealed
+                # Keeps revealing cells until a mine is found
                 break 
             self.field[row][col].revealed = True
             if row - 1 >= 0 and not self.field[row - 1][col].revealed: 

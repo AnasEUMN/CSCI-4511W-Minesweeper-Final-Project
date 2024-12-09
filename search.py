@@ -81,7 +81,8 @@ class Node:
         """List the nodes reachable in one step from this node."""
         return [self.child_node(problem, action)
                 for action in problem.actions(self.state)]
-
+    # Edit this? Need to check the heuristic value of each cell in the current state, not the heuristic values of next states
+    # Calculate heuristic values first, then perform the action
     def child_node(self, problem, action):
         """[Figure 3.10]"""
         next_state = problem.result(self.state, action)
@@ -234,12 +235,11 @@ class Minesweeper(Problem):
         """ Given state and action, return a new state that is the result of the action.
         Action is assumed to be a valid action in the state """
         cell = action.split(",")
-        # Python objects mutable? Would revealing a cell here cause a failure later on? Do we need to make a copy of the state first?
+        # Would revealing a cell here cause a failure later on? Can't undo guesses in Minesweeper
         state.reveal_cell(int(cell[0]), int(cell[1]), False)
         return state
 
     def goal_test(self, state):
         """ Given a state, return True if state is a goal state or False, otherwise """
-        # Return game_over and check elsewhere if agent lost or won?
         return state.game_over()
     
