@@ -1,4 +1,4 @@
-from search import *
+from minesweeper import *
 
 initial_state = Minefield(16, 16, 40)
 minesweeper = Minesweeper(initial_state)

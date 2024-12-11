@@ -35,7 +35,7 @@ class Minesweeper():
         return self.state.game_over()
     
     def play_game(self, heuristic):
-        """ Game loop for a Minesweeper. This uses a heuristic to test which cell to reveal before taking actions.
+        """ Game loop for Minesweeper. This uses a heuristic to test which cell to reveal before taking actions.
         In Minesweeper, once an action is taken, there is no going back. """
         moves = 0
         while not self.goal_test(self.state):
