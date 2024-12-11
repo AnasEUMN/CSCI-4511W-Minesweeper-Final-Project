@@ -1,5 +1,6 @@
 from search import *
 
 initial_state = Minefield(16, 16, 40)
-
-(final_state, win, moves) = minesweeper_astar_search(initial_state, 1)
+minesweeper = Minesweeper(initial_state)
+heuristic = 1
+(final_state, win, moves) = minesweeper.play_game(heuristic)
