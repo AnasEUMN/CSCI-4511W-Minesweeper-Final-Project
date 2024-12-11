@@ -1,19 +1,23 @@
 import random
+from itertools import combinations
 
 class Cell:
-    def __init__(self, revealed, status):
+    def __init__(self, revealed, status, x, y):
         self.revealed = revealed
-        self.status = status    
+        self.status = status  
+        self.x = x
+        self.y = y  
 
 class Minefield:
     def __init__(self, rows, cols, mines):
         # Minefield size is not expected to be very large
         self.flags = mines
+        self.mines = mines
         self.field = []
         for i in range(rows):
             row = []
             for j in range(cols):
-                cell = Cell(False, "-")
+                cell = Cell(False, "-", i, j)
                 row.append(cell)
             self.field.append(row)
         self.place_mines(0, 0, mines)
@@ -214,6 +218,17 @@ class Minefield:
                 if not self.field[i][j].revealed:
                     unrevealed.append(self.field[i][j])
         return unrevealed
+    
+    def get_S(self):  # S
+        S = []
+        C = set(self.get_unrevealed_cells())
+        S_prime = set(combinations(C, self.mines))
+        B = set(self.get_revealed_cells())
+        for cell in B:
+            for subset in S_prime:
+                if len(set(subset) & set(self.get_neighborhood(cell.x, cell.y))) == self.get_num_neighboring_mines(cell.x, cell.y):
+                    S.append(list(subset))
+        return S
 
     def __str__(self):
         board = "    "  
@@ -234,6 +249,9 @@ class Minefield:
             board += "\n"
         return board
     
-# m = Minefield(16, 16, 40)
-# print(m)
+m = Minefield(4, 4, 4)
+print(m)
+S = m.get_S()
+# for i in range(len(S)):
+#     print(S[i][0].status)
        

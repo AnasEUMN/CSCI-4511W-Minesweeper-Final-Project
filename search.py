@@ -181,20 +181,22 @@ def iterative_deepening_search(problem):
 
 
 def heuristic_1(state): 
-    return ""
+    return "0,0"
 
 def heuristic_2(state): 
-    return ""
+    return "0,0"
 
-def minesweeper_astar_search(problem, heuristic):
-    """ Variant of A* specific for Minesweeper. This version uses a heuristic to test which cell to reveal before taking actions.
+def minesweeper_game_loop_search(problem, heuristic):
+    """ Game loop search specific for a Minesweeper problem. This uses a heuristic to test which cell to reveal before taking actions.
     In Minesweeper, once an action is taken, there is no going back. """
     state = problem.initial
+    moves = 0
     while not problem.goal_test(state):
         action = problem.best_action(state, heuristic)
         cell = action.split(",")
-        win = state.reveal_cell(cell[0], cell[1], False)
-    return (state, win)    
+        win = state.reveal_cell(int(cell[0]), int(cell[1]), False)
+        moves += 1
+    return (state, win, moves)    
 
 class Minesweeper(Problem):
     def __init__(self, initial, goal=None):
