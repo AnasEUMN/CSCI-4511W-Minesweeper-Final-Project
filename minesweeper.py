@@ -39,6 +39,32 @@ def heuristic_4(state):
     # Combine heuristics?
     return "0,0" 
 
+def heuristic_sus(state):
+    e_bs = []
+    C = set(state.get_unrevealed_cells())
+    S = set(tuple(s) for s in state.get_S())
+    for i in range(len(state.field)):
+        for j in range(len(state.field[0])):
+            b = state.field[i][j]
+            if b in C:
+                U_b = set(state.get_neighborhood(b.x, b.y))
+                e_b = 0
+                for n in range(len(U_b) + 1):
+                    S_b_n = []
+                    for s in S:
+                        s = set(s)
+                        if (b not in s) and (n == len(U_b & s)):
+                            S_b_n.append(tuple(s))
+                    p_b_n = len(S_b_n) / len(S)
+                    e_b += (p_b_n * len(C - {b} - set(s for s in S_b_n)))
+                e_bs.append((b, e_b))
+    cell_and_max_e_b = (e_bs[0][0], e_bs[0][1])
+    for b, e_b in e_bs:
+        if e_b > cell_and_max_e_b[1]:
+            cell_and_max_e_b = (b, e_b)
+    best_move = f"{cell_and_max_e_b[0].x},{cell_and_max_e_b[0].y}"
+    return best_move
+
 class Minesweeper():
     def __init__(self, initial):
         """ Define initial state """
@@ -51,7 +77,7 @@ class Minesweeper():
         elif heuristic == 2:
             best_action = random_move(self.state)
         elif heuristic == 3:
-            best_action = heuristic_3(self.state)
+            best_action = heuristic_sus(self.state)
         elif heuristic == 4:
             best_action = heuristic_4(self.state)
         return best_action 
@@ -73,29 +99,3 @@ class Minesweeper():
             moves += 1
         return (self.state, win, moves)   
     
-
-
-# def heuristic_1(state): 
-#     e_bs = []
-#     C = set(state.get_unrevealed_cells())
-#     S = set(tuple(s) for s in state.get_S())
-#     for i in range(len(state.field)):
-#         for j in range(len(state.field[0])):
-#             b = state.field[i][j]
-#             U_b = set(state.get_neighborhood(b.x, b.y))
-#             e_b = 0
-#             for n in range(len(U_b) + 1):
-#                 S_b_n = []
-#                 for s in S:
-#                     s = set(s)
-#                     if (b not in s) and (n == len(U_b & s)):
-#                         S_b_n.append(tuple(s))
-#                 p_b_n = len(S_b_n) / len(S)
-#                 e_b += (p_b_n * len(C - {b} - set(s for s in S_b_n)))
-#             e_bs.append((b, e_b))
-#         cell_and_max_e_b = (e_bs[0][0], e_bs[0][1])
-#     for b, e_b in e_bs:
-#         if e_b > cell_and_max_e_b[1]:
-#             cell_and_max_e_b = (b, e_b)
-#     best_move = f"{cell_and_max_e_b[0].x},{cell_and_max_e_b[0].y}"
-#     return best_move

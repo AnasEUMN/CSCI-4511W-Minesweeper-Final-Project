@@ -1,8 +1,8 @@
 from minesweeper import *
 
-initial_state = Minefield(5, 5, 4)
+initial_state = Minefield(4, 4, 3)
 minesweeper = Minesweeper(initial_state)
-heuristic = 1
+heuristic = 3
 result = minesweeper.play_game(heuristic)
 
 final_state = result[0]
