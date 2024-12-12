@@ -9,7 +9,7 @@ final_state = result[0]
 win = result[1]
 moves = result[2]
 
-print("--------------------")
 print(final_state)
 print(f"Win: {win}")
 print(f"Moves: {moves}")
+print()

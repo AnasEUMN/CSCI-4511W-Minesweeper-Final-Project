@@ -248,10 +248,4 @@ class Minefield:
                     board += "  -" 
             board += "\n"
         return board
-    
-# m = Minefield(2, 2, 1)
-# print(m)
-# S = m.get_S()
-# for i in range(len(S)):
-#     print(S[i][0].status)
        

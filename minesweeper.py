@@ -4,8 +4,8 @@ import random
 def minimizing_mine_probability(state):
     probabilities = []
     S = state.get_S()
-    C = state.get_unrevealed_cells()
-    for cell in C:
+    unrevealed = state.get_unrevealed_cells()
+    for cell in unrevealed:
         numerator = []
         for s in S:
             if cell in s:
@@ -18,9 +18,18 @@ def minimizing_mine_probability(state):
     best_move = f"{best[0].x},{best[0].y}"
     return best_move
 
-def heuristic_2(state):
-    x = random.randint(0, len(state.field) - 1)
-    y = random.randint(0, len(state.field[0]) - 1)
+def random_move(state):
+    revealed = state.get_revealed_cells()
+    x = -1
+    y = -1
+    success = False
+    while not success:
+        x = random.randint(0, len(state.field) - 1)
+        y = random.randint(0, len(state.field[0]) - 1)
+        success = True
+        for cell in revealed:
+            if cell.x == x and cell.y == y:
+                success = False
     return f"{x},{y}"
 
 def heuristic_3(state):
@@ -40,7 +49,7 @@ class Minesweeper():
         if heuristic == 1:
             best_action = minimizing_mine_probability(self.state)
         elif heuristic == 2:
-            best_action = heuristic_2(self.state)
+            best_action = random_move(self.state)
         elif heuristic == 3:
             best_action = heuristic_3(self.state)
         elif heuristic == 4:
@@ -57,10 +66,10 @@ class Minesweeper():
         win = False
         moves = 0
         while not self.goal_test():
+            print(self.state)
             action = self.best_action(heuristic)
             cell = action.split(",")
             win = self.state.reveal_cell(int(cell[0]), int(cell[1]), False)
-            print(self.state)
             moves += 1
         return (self.state, win, moves)   
     
