@@ -6,7 +6,8 @@ def test_minesweeper_heuristic(heuristic):
         initial_state = Minefield(4, 4, 3)
         minesweeper = Minesweeper(initial_state)
         result = minesweeper.play_game(heuristic) 
-        if result[1] == True:
+        print(result[0])
+        if result[1]:
             wins += 1
     print(f"Wins: {wins}")  
 
