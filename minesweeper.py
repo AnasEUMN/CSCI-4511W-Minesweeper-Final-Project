@@ -60,7 +60,7 @@ def heuristic_sus(state):
                 e_bs.append((b, e_b))
     cell_and_max_e_b = (e_bs[0][0], e_bs[0][1])
     for b, e_b in e_bs:
-        if e_b > cell_and_max_e_b[1]:
+        if e_b >= cell_and_max_e_b[1]:
             cell_and_max_e_b = (b, e_b)
     best_move = f"{cell_and_max_e_b[0].x},{cell_and_max_e_b[0].y}"
     return best_move
