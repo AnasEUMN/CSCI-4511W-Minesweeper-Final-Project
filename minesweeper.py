@@ -49,7 +49,7 @@ def maximize_safe_cells(state):
             if b in C:
                 U_b = set(state.get_neighborhood(b.x, b.y))
                 e_b = 0
-                for n in range(len(U_b) + 1):
+                for n in range(len(U_b) + 1): 
                     S_b_n = []
                     for s in S:
                         s = set(s)
@@ -58,10 +58,13 @@ def maximize_safe_cells(state):
                     p_b_n = len(S_b_n) / len(S)
                     e_b += (p_b_n * len(C - {b} - set(s for s in S_b_n)))
                 e_bs.append((b, e_b))
-    cell_and_max_e_b = (e_bs[0][0], e_bs[0][1])
+    best_move = (e_bs[0][0], e_bs[0][1])
+    for b, e_b in e_bs:
+        if e_b > best_move[1]:
+            best_move = (b, e_b)
     best_moves = []
     for b, e_b in e_bs:
-        if e_b >= cell_and_max_e_b[1]:
+        if e_b == best_move[1]:
             best_moves.append((b, e_b))
     index = random.randint(0, len(best_moves) - 1)
     best_move = best_moves[index]

@@ -11,4 +11,4 @@ def test_minesweeper_heuristic(heuristic):
             wins += 1
     print(f"Wins: {wins}")  
 
-test_minesweeper_heuristic(1)
+test_minesweeper_heuristic(3)
