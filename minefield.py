@@ -104,7 +104,29 @@ class Minefield:
             if col + 1 < len(self.field[0]):
                 if self.field[row][col + 1].status == "0" and not self.field[row][col + 1].revealed:
                     next = [row, col + 1]
-                    stack.append(next)   
+                    stack.append(next)  
+            if row - 1 >= 0 and col - 1 >= 0:
+                if self.field[row - 1][col - 1].status == "0" and not self.field[row - 1][col - 1].revealed:
+                    next = [row - 1, col - 1]
+                    stack.append(next)
+            if row - 1 >= 0 and col + 1 < len(self.field[0]):
+                if self.field[row - 1][col + 1].status == "0" and not self.field[row - 1][col + 1].revealed:
+                    next = [row - 1, col + 1]
+                    stack.append(next) 
+            if row + 1 < len(self.field) and col - 1 >= 0:
+                if self.field[row + 1][col - 1].status == "0" and not self.field[row + 1][col - 1].revealed:
+                    next = [row + 1, col - 1]
+                    stack.append(next)
+            if row + 1 < len(self.field) and col + 1 < len(self.field[0]):
+                if self.field[row + 1][col + 1].status == "0" and not self.field[row + 1][col + 1].revealed:
+                    next = [row + 1, col + 1]
+                    stack.append(next) 
+        for i in range(len(self.field)):
+            for j in range(len(self.field[0])):
+                if self.field[i][j].status == "0" and self.field[i][j].revealed:
+                    neighborhood = self.get_neighborhood(i, j)
+                    for cell in neighborhood:
+                        cell.revealed = True
         
     def reveal_start_area(self, x, y):
         queue = []
@@ -130,6 +152,22 @@ class Minefield:
             if col + 1 < len(self.field[0]) and not self.field[row][col + 1].revealed: 
                 next = [row, col + 1]
                 queue.append(next)
+            if row - 1 >= 0 and col - 1 >= 0 and not self.field[row - 1][col - 1].revealed: 
+                next = [row - 1, col - 1]
+                queue.append(next)
+            if row - 1 >= 0 and col + 1 < len(self.field[0]) and not self.field[row - 1][col + 1].revealed: 
+                next = [row - 1, col + 1]
+                queue.append(next)
+            if row + 1 < len(self.field) and col - 1 >= 0 and not self.field[row + 1][col - 1].revealed: 
+                next = [row + 1, col - 1]
+                queue.append(next)
+            if row + 1 < len(self.field) and col + 1 < len(self.field[0]) and not self.field[row + 1][col + 1].revealed: 
+                next = [row + 1, col + 1]
+                queue.append(next)
+        for i in range(len(self.field)):
+            for j in range(len(self.field[0])):
+                if self.field[i][j].status == "0" and self.field[i][j].revealed:
+                    self.reveal_zeroes(i, j)
 
     def reveal_cell(self, x, y, flag):
         if flag:
@@ -248,4 +286,7 @@ class Minefield:
                     board += "  -" 
             board += "\n"
         return board
-       
+
+
+m = Minefield(16, 16, 40)
+print(m)      
