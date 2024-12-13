@@ -42,7 +42,7 @@ def maximize_safe_cells(state):
             if b in C:
                 U_b = set(state.get_neighborhood(b.x, b.y))
                 e_b = 0
-                for n in range(len(U_b) + 1): 
+                for n in range(len(U_b) + state.mines): 
                     S_b_n = []
                     for s in S:
                         s = set(s)
@@ -89,7 +89,7 @@ def combine_min_probability_max_safe(state):
             if b in best_ps:
                 U_b = set(state.get_neighborhood(b.x, b.y))
                 e_b = 0
-                for n in range(len(U_b) + 1): 
+                for n in range(len(U_b) + state.mines): 
                     S_b_n = []
                     for s in S:
                         s = set(s)
