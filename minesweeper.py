@@ -39,7 +39,7 @@ def heuristic_4(state):
     # Combine heuristics?
     return "0,0" 
 
-def heuristic_sus(state):
+def maximize_safe_cells(state):
     e_bs = []
     C = set(state.get_unrevealed_cells())
     S = set(tuple(s) for s in state.get_S())
@@ -80,7 +80,7 @@ class Minesweeper():
         elif heuristic == 2:
             best_action = random_move(self.state)
         elif heuristic == 3:
-            best_action = heuristic_sus(self.state)
+            best_action = maximize_safe_cells(self.state)
         elif heuristic == 4:
             best_action = heuristic_4(self.state)
         return best_action 
