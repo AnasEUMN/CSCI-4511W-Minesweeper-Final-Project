@@ -1,7 +1,7 @@
 from minefield import *
 import random
 
-def minimizing_mine_probability(state):
+def minimize_mine_probability(state):
     probabilities = []
     S = state.get_S()
     unrevealed = state.get_unrevealed_cells()
@@ -76,7 +76,7 @@ class Minesweeper():
     def best_action(self, heuristic):
         """ Given a Minesweeper state, return the best action according to the given Minesweeper heuristic """
         if heuristic == 1:
-            best_action = minimizing_mine_probability(self.state)
+            best_action = minimize_mine_probability(self.state)
         elif heuristic == 2:
             best_action = random_move(self.state)
         elif heuristic == 3:
