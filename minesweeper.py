@@ -59,10 +59,13 @@ def heuristic_sus(state):
                     e_b += (p_b_n * len(C - {b} - set(s for s in S_b_n)))
                 e_bs.append((b, e_b))
     cell_and_max_e_b = (e_bs[0][0], e_bs[0][1])
+    best_moves = []
     for b, e_b in e_bs:
         if e_b >= cell_and_max_e_b[1]:
-            cell_and_max_e_b = (b, e_b)
-    best_move = f"{cell_and_max_e_b[0].x},{cell_and_max_e_b[0].y}"
+            best_moves.append((b, e_b))
+    index = random.randint(0, len(best_moves) - 1)
+    best_move = best_moves[index]
+    best_move = f"{best_move[0].x},{best_move[0].y}"
     return best_move
 
 class Minesweeper():
