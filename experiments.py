@@ -1,17 +1,17 @@
 from minesweeper import *
 
-def test_minesweeper_heuristic(heuristic):
+def test_minesweeper_heuristic(heuristic, games, x, y, mines):
     wins = 0
     moves = 0
-    for i in range(100):
-        initial_state = Minefield(5, 5, 4)
+    for i in range(games):
+        initial_state = Minefield(x, y, mines)
         minesweeper = Minesweeper(initial_state)
         result = minesweeper.play_game(heuristic) 
         print(result[0])
         if result[1]:
             wins += 1
         moves += result[2]
-    print(f"Wins: {wins}") 
+    print(f"Wins: {wins}/{games}") 
     print(f"Moves: {moves}") 
 
-test_minesweeper_heuristic(3)
+test_minesweeper_heuristic(2, 1000, 4, 4, 3)
