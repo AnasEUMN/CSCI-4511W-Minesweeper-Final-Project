@@ -1,6 +1,20 @@
 from minefield import *
 import random
 
+def random_move(state):
+    revealed = state.get_revealed_cells()
+    x = -1
+    y = -1
+    success = False
+    while not success:
+        x = random.randint(0, len(state.field) - 1)
+        y = random.randint(0, len(state.field[0]) - 1)
+        success = True
+        for cell in revealed:
+            if cell.x == x and cell.y == y:
+                success = False
+    return f"{x},{y}"
+
 def minimize_mine_probability(state):
     probabilities = []
     S = state.get_S()
@@ -17,27 +31,6 @@ def minimize_mine_probability(state):
             best = (cell, probability)
     best_move = f"{best[0].x},{best[0].y}"
     return best_move
-
-def random_move(state):
-    revealed = state.get_revealed_cells()
-    x = -1
-    y = -1
-    success = False
-    while not success:
-        x = random.randint(0, len(state.field) - 1)
-        y = random.randint(0, len(state.field[0]) - 1)
-        success = True
-        for cell in revealed:
-            if cell.x == x and cell.y == y:
-                success = False
-    return f"{x},{y}"
-
-def heuristic_3(state):
-    return "0,0"
-
-def heuristic_4(state):
-    # Combine heuristics?
-    return "0,0" 
 
 def maximize_safe_cells(state):
     e_bs = []
@@ -58,17 +51,64 @@ def maximize_safe_cells(state):
                     p_b_n = len(S_b_n) / len(S)
                     e_b += (p_b_n * len(C - {b} - set(s for s in S_b_n)))
                 e_bs.append((b, e_b))
-    best_move = (e_bs[0][0], e_bs[0][1])
+    best = (e_bs[0][0], e_bs[0][1])
     for b, e_b in e_bs:
-        if e_b > best_move[1]:
-            best_move = (b, e_b)
-    best_moves = []
+        if e_b > best[1]:
+            best = (b, e_b)
+    bests = []
     for b, e_b in e_bs:
-        if e_b == best_move[1]:
-            best_moves.append((b, e_b))
-    index = random.randint(0, len(best_moves) - 1)
-    best_move = best_moves[index]
-    best_move = f"{best_move[0].x},{best_move[0].y}"
+        if e_b == best[1]:
+            bests.append((b, e_b))
+    index = random.randint(0, len(bests) - 1)
+    best = bests[index]
+    best_move = f"{best[0].x},{best[0].y}"
+    return best_move
+
+def combine_min_probability_max_safe(state):
+    probabilities = []
+    S = state.get_S()
+    unrevealed = state.get_unrevealed_cells()
+    for cell in unrevealed:
+        numerator = []
+        for s in S:
+            if cell in s:
+                numerator.append(s)
+        probabilities.append((cell, len(numerator) / len(S)))
+    best_p = (probabilities[0][0], probabilities[0][1])
+    for cell, probability in probabilities:
+        if probability < best_p[1]:
+            best_p = (cell, probability)
+    best_ps = []
+    for cell, probability in probabilities:
+        if probability == best_p[1]:
+            best_ps.append(cell)
+    e_bs = []
+    for i in range(len(state.field)):
+        for j in range(len(state.field[0])):
+            b = state.field[i][j]
+            if b in best_ps:
+                U_b = set(state.get_neighborhood(b.x, b.y))
+                e_b = 0
+                for n in range(len(U_b) + 1): 
+                    S_b_n = []
+                    for s in S:
+                        s = set(s)
+                        if (b not in s) and (n == len(U_b & s)):
+                            S_b_n.append(tuple(s))
+                    p_b_n = len(S_b_n) / len(S)
+                    e_b += (p_b_n * len(set(best_ps) - {b} - set(s for s in S_b_n)))
+                e_bs.append((b, e_b))
+    best = (e_bs[0][0], e_bs[0][1])
+    for b, e_b in e_bs:
+        if e_b > best[1]:
+            best = (b, e_b)
+    bests = []
+    for b, e_b in e_bs:
+        if e_b == best[1]:
+            bests.append((b, e_b))
+    index = random.randint(0, len(bests) - 1)
+    best = bests[index]
+    best_move = f"{best[0].x},{best[0].y}"
     return best_move
 
 class Minesweeper():
@@ -79,13 +119,13 @@ class Minesweeper():
     def best_action(self, heuristic):
         """ Given a Minesweeper state, return the best action according to the given Minesweeper heuristic """
         if heuristic == 1:
-            best_action = minimize_mine_probability(self.state)
-        elif heuristic == 2:
             best_action = random_move(self.state)
+        elif heuristic == 2:
+            best_action = minimize_mine_probability(self.state)
         elif heuristic == 3:
             best_action = maximize_safe_cells(self.state)
         elif heuristic == 4:
-            best_action = heuristic_4(self.state)
+            best_action = combine_min_probability_max_safe(self.state)
         return best_action 
 
     def goal_test(self):
