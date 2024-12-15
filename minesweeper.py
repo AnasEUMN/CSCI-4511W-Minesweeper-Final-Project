@@ -3,8 +3,6 @@ import random
 
 def random_move(state):
     unrevealed = state.get_unrevealed_cells()
-    x = -1
-    y = -1
     index = random.randint(0, len(unrevealed) - 1)
     cell = unrevealed[index]
     return f"{cell.x},{cell.y}"
