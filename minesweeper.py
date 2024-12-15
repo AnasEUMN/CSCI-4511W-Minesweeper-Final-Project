@@ -21,6 +21,12 @@ def minimize_mine_probability(state):
     for cell, probability in probabilities:
         if probability < best[1]:
             best = (cell, probability)
+    bests = []
+    for cell, probability in probabilities:
+        if probability == best[1]:
+            bests.append((cell, probability))
+    index = random.randint(0, len(bests) - 1)
+    best = bests[index]
     best_move = f"{best[0].x},{best[0].y}"
     return best_move
 
