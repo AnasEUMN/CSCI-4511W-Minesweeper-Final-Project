@@ -1,4 +1,5 @@
 from minefield import *
+import math
 import random
 
 def random_move(state):
@@ -30,8 +31,8 @@ def minimize_mine_probability(state):
     best_move = f"{best[0].x},{best[0].y}"
     return best_move
 
-def maximize_safe_cells(state):
-    e_bs = []
+def maximize_f_entropy(state):
+    q_bs = []
     C = set(state.get_unrevealed_cells())
     S = set(tuple(s) for s in state.get_S())
     for i in range(len(state.field)):
@@ -39,7 +40,7 @@ def maximize_safe_cells(state):
             b = state.field[i][j]
             if b in C:
                 U_b = set(state.get_neighborhood(b.x, b.y))
-                e_b = 0
+                q_b = 0
                 for n in range(len(U_b) + state.mines): 
                     S_b_n = []
                     for s in S:
@@ -47,22 +48,23 @@ def maximize_safe_cells(state):
                         if (b not in s) and (n == len(U_b & s)):
                             S_b_n.append(tuple(s))
                     p_b_n = len(S_b_n) / len(S)
-                    e_b += (p_b_n * len(C - {b} - set(s for s in S_b_n)))
-                e_bs.append((b, e_b))
-    best = (e_bs[0][0], e_bs[0][1])
-    for b, e_b in e_bs:
-        if e_b > best[1]:
-            best = (b, e_b)
+                    if p_b_n > 0:
+                        q_b -= (p_b_n * math.log2(p_b_n))
+                q_bs.append((b, q_b))
+    best = (q_bs[0][0], q_bs[0][1])
+    for b, q_b in q_bs:
+        if q_b > best[1]:
+            best = (b, q_b)
     bests = []
-    for b, e_b in e_bs:
-        if e_b == best[1]:
-            bests.append((b, e_b))
+    for b, q_b in q_bs:
+        if q_b == best[1]:
+            bests.append((b, q_b))
     index = random.randint(0, len(bests) - 1)
     best = bests[index]
     best_move = f"{best[0].x},{best[0].y}"
     return best_move
 
-def combine_min_probability_max_safe(state):
+def combine_min_probability_max_entropy(state):
     probabilities = []
     S = state.get_S()
     unrevealed = state.get_unrevealed_cells()
@@ -80,13 +82,13 @@ def combine_min_probability_max_safe(state):
     for cell, probability in probabilities:
         if probability == best_p[1]:
             best_ps.append(cell)
-    e_bs = []
+    q_bs = []
     for i in range(len(state.field)):
         for j in range(len(state.field[0])):
             b = state.field[i][j]
             if b in best_ps:
                 U_b = set(state.get_neighborhood(b.x, b.y))
-                e_b = 0
+                q_b = 0
                 for n in range(len(U_b) + state.mines): 
                     S_b_n = []
                     for s in S:
@@ -94,16 +96,17 @@ def combine_min_probability_max_safe(state):
                         if (b not in s) and (n == len(U_b & s)):
                             S_b_n.append(tuple(s))
                     p_b_n = len(S_b_n) / len(S)
-                    e_b += (p_b_n * len(set(best_ps) - {b} - set(s for s in S_b_n)))
-                e_bs.append((b, e_b))
-    best = (e_bs[0][0], e_bs[0][1])
-    for b, e_b in e_bs:
-        if e_b > best[1]:
-            best = (b, e_b)
+                    if p_b_n > 0:
+                        q_b -= (p_b_n * math.log2(p_b_n))
+                q_bs.append((b, q_b))
+    best = (q_bs[0][0], q_bs[0][1])
+    for b, q_b in q_bs:
+        if q_b > best[1]:
+            best = (b, q_b)
     bests = []
-    for b, e_b in e_bs:
-        if e_b == best[1]:
-            bests.append((b, e_b))
+    for b, q_b in q_bs:
+        if q_b == best[1]:
+            bests.append((b, q_b))
     index = random.randint(0, len(bests) - 1)
     best = bests[index]
     best_move = f"{best[0].x},{best[0].y}"
@@ -121,9 +124,9 @@ class Minesweeper():
         elif heuristic == 2:
             best_action = minimize_mine_probability(self.state)
         elif heuristic == 3:
-            best_action = maximize_safe_cells(self.state)
+            best_action = maximize_f_entropy(self.state)
         elif heuristic == 4:
-            best_action = combine_min_probability_max_safe(self.state)
+            best_action = combine_min_probability_max_entropy(self.state)
         return best_action 
 
     def goal_test(self):
