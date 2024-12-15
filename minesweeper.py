@@ -2,18 +2,12 @@ from minefield import *
 import random
 
 def random_move(state):
-    revealed = state.get_revealed_cells()
+    unrevealed = state.get_unrevealed_cells()
     x = -1
     y = -1
-    success = False
-    while not success:
-        x = random.randint(0, len(state.field) - 1)
-        y = random.randint(0, len(state.field[0]) - 1)
-        success = True
-        for cell in revealed:
-            if cell.x == x and cell.y == y:
-                success = False
-    return f"{x},{y}"
+    index = random.randint(0, len(unrevealed) - 1)
+    cell = unrevealed[index]
+    return f"{cell.x},{cell.y}"
 
 def minimize_mine_probability(state):
     probabilities = []
