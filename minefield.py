@@ -6,7 +6,7 @@ class Cell:
         self.revealed = revealed
         self.status = status  
         self.x = x
-        self.y = y  
+        self.y = y
 
 class Minefield:
     def __init__(self, rows, cols, mines):
@@ -23,7 +23,7 @@ class Minefield:
         self.place_mines(0, 0, mines)
         self.evaluate_field()
         # Always reveals the top left corner first
-        self.reveal_start_area(0, 0)
+        self.reveal_start_area(0, 0)        
 
     def place_mines(self, x, y, mines):
         while mines > 0:
@@ -286,7 +286,4 @@ class Minefield:
                     board += "  -" 
             board += "\n"
         return board
-
-
-m = Minefield(16, 16, 40)
-print(m)      
+     

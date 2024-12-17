@@ -122,10 +122,12 @@ class Minesweeper():
         if heuristic == 1:
             best_action = random_move(self.state)
         elif heuristic == 2:
-            best_action = minimize_mine_probability(self.state)
+            best_action = 
         elif heuristic == 3:
-            best_action = maximize_f_entropy(self.state)
+            best_action = minimize_mine_probability(self.state)
         elif heuristic == 4:
+            best_action = maximize_f_entropy(self.state)
+        elif heuristic == 5:
             best_action = combine_min_probability_max_entropy(self.state)
         return best_action 
 
