@@ -8,6 +8,28 @@ def random_move(state):
     cell = unrevealed[index]
     return f"{cell.x},{cell.y}"
 
+def neighbor_sum(state):
+    revealed = state.get_revealed_cells()
+    unrevealed_neighbors = []
+    for cell in revealed:
+        neighbors = state.get_neighborhood()
+        for neighbor in neighbors:
+            if not neighbor.revealed and neighbor not in unrevealed_neighbors:
+                unrevealed_neighbors.append(neighbor)
+    currCell = None
+    currMin  = float('inf')
+    for cell in unrevealed_neighbors:
+        neighborhood = state.get_neighborhood()
+        sum = 0
+        for neighborCell in neighborhood:
+            if neighborCell.revealed:
+                sum += int(neighborCell.status)
+        if sum < currMin:
+            currMin = sum
+            currCell = cell
+    return f"{currCell.x},{currCell.y}"
+
+
 def minimize_mine_probability(state):
     probabilities = []
     S = state.get_S()
@@ -122,7 +144,7 @@ class Minesweeper():
         if heuristic == 1:
             best_action = random_move(self.state)
         elif heuristic == 2:
-            best_action = 
+            best_action = neighbor_sum(self.state)
         elif heuristic == 3:
             best_action = minimize_mine_probability(self.state)
         elif heuristic == 4:
