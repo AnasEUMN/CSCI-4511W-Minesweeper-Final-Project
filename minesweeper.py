@@ -12,14 +12,14 @@ def neighbor_sum(state):
     revealed = state.get_revealed_cells()
     unrevealed_neighbors = []
     for cell in revealed:
-        neighbors = state.get_neighborhood()
+        neighbors = state.get_neighborhood(cell.x,cell.y)
         for neighbor in neighbors:
             if not neighbor.revealed and neighbor not in unrevealed_neighbors:
                 unrevealed_neighbors.append(neighbor)
     currCell = None
     currMin  = float('inf')
     for cell in unrevealed_neighbors:
-        neighborhood = state.get_neighborhood()
+        neighborhood = state.get_neighborhood(cell.x,cell.y)
         sum = 0
         for neighborCell in neighborhood:
             if neighborCell.revealed:
