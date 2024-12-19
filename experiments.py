@@ -14,4 +14,4 @@ def test_minesweeper_heuristic(heuristic, games, x, y, mines):
     print(f"Wins: {wins}/{games}") 
     print(f"Moves: {moves}") 
 
-test_minesweeper_heuristic(2, 1, 6, 6, 5)
+test_minesweeper_heuristic(5, 100, 6, 6, 6)
