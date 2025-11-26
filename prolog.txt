@@ -1,0 +1,22 @@
+p(X, [X|_]).
+p(X, [_|Z]) :- p(X,Z).
+
+first(X, [X,_]).
+
+sorted([]).
+sorted([_]).
+sorted([H|T]) :- T = [F|_], H < F, sorted(T).
+
+
+subset([],_).
+subset([H|T], Y) :- p(H,Y), subset(T,Y).
+
+perm([X],[X]).
+perm(X,Y) :- subset(X,Y), subset(Y,X).
+
+
+link(a,b).
+link(b,c).
+
+path(X,Y) :- link(X,Y).
+path(X,Y) :- link(X,Z), path(Z,Y).
